@@ -81,6 +81,11 @@ public class ProductItemEditService extends BaseJpaRepoEditService<ProductItem, 
         return changingTheProductStatus(productItemId, editingForm, invalidStatus);
     }
 
+    public ProductItem markProductStatusAsActive(String productItemId, ProductStatusEditingForm editingForm) {
+        ProductStatus invalidStatus = ProductStatus.ACTIVE;
+        return changingTheProductStatus(productItemId, editingForm, invalidStatus);
+    }
+
     private ProductItem changingTheProductStatus(String productItemId, ProductStatusEditingForm editForm, ProductStatus invalidCurrentStatus) {
         var productItem = findByEntityId(productItemId);
 

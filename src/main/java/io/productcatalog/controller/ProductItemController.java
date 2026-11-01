@@ -95,11 +95,9 @@ public class ProductItemController {
             @PathVariable String productItemId,
             Authentication auth,
             Locale locale) {
-        var form = new ProductStatusEditingForm();
-        form.setSessionUserId(auth.getName());
-        form.setStatus(ProductStatus.BLOCKED);
+        productStatusUpdateService.updateProductStatusToBlocked(productItemId, auth.getName());
 
-        var productItem = productItemEditService.markProductStatusAsBlocked(productItemId, form);
+        var productItem = productItemReadService.findByEntityId(productItemId);
         return new EntityApiResponse<>(
                 Message.get("product.item.update.succeess", locale),
                 new ProductItemView(productItem)
@@ -115,4 +113,7 @@ public class ProductItemController {
     public void setProductItemReadService(ProductItemReadService productItemReadService) {
         this.productItemReadService = productItemReadService;
     }
+
+    @Autowired
+    public void setProductStatusUpdateService(ProductStatusUpdateService productStatusUpdateService) {this.productStatusUpdateService = productStatusUpdateService;}
 }
