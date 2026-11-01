@@ -3,11 +3,9 @@ package io.productcatalog.controller;
 import io.lib.service.Message;
 import io.lib.view.EntityApiResponse;
 import io.lib.view.PagedEntityApiResponse;
-import io.productcatalog.entity.ProductStatus;
 import io.productcatalog.form.ProductItemEditForm;
 import io.productcatalog.form.ProductItemFetchForm;
 import io.productcatalog.form.ProductItemRegistrationForm;
-import io.productcatalog.form.ProductStatusEditingForm;
 import io.productcatalog.service.ProductItemEditService;
 import io.productcatalog.service.ProductItemReadService;
 import io.productcatalog.service.ProductStatusUpdateService;
@@ -96,6 +94,21 @@ public class ProductItemController {
             Authentication auth,
             Locale locale) {
         productStatusUpdateService.updateProductStatusToBlocked(productItemId, auth.getName());
+
+        var productItem = productItemReadService.findByEntityId(productItemId);
+        return new EntityApiResponse<>(
+                Message.get("product.item.update.succeess", locale),
+                new ProductItemView(productItem)
+        );
+    }
+
+    @PreAuthorize("hasAuthority('UPDATE_PRODUCT_STATUS_TO_ACTIVE')")
+    @PutMapping("update-product-status-to-active/{productItemId}")
+    public EntityApiResponse<ProductItemView> updateProductStatusToActive(
+            @PathVariable String productItemId,
+            Authentication auth,
+            Locale locale) {
+        productStatusUpdateService.updateProductStatusToActive(productItemId, auth.getName());
 
         var productItem = productItemReadService.findByEntityId(productItemId);
         return new EntityApiResponse<>(
