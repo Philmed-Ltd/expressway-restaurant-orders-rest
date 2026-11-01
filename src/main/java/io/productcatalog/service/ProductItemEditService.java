@@ -5,8 +5,10 @@ import io.lib.exception.CommonRuntimeException;
 import io.lib.exception.ExceptionType;
 import io.lib.service.BaseJpaRepoEditService;
 import io.productcatalog.entity.ProductItem;
+import io.productcatalog.entity.ProductStatus;
 import io.productcatalog.form.ProductItemEditForm;
 import io.productcatalog.form.ProductItemRegistrationForm;
+import io.productcatalog.form.ProductStatusEditingForm;
 import io.productcatalog.repository.ProductItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,6 +74,39 @@ public class ProductItemEditService extends BaseJpaRepoEditService<ProductItem, 
         if (exists) {
             throw new CommonRuntimeException(ExceptionType.BAD_REQUEST, "error.duplicate.name");
         }
+    }
+
+    public ProductItem markProductStatusAsBlocked(String productItemId, ProductStatusEditingForm editingForm) {
+        ProductStatus invalidStatus = ProductStatus.BLOCKED;
+        return changingTheProductStatus(productItemId, editingForm, invalidStatus);
+    }
+
+    private ProductItem changingTheProductStatus(String productItemId, ProductStatusEditingForm editForm, ProductStatus invalidCurrentStatus) {
+        var productItem = findByEntityId(productItemId);
+
+        if (productItem.getStatus() == invalidCurrentStatus) {
+            throw new CommonRuntimeException(ExceptionType.BAD_REQUEST, "error.invalid.status");
+        }
+
+        var updateProductItem = updateProductStatus(productItemId, editForm.getStatus(), editForm.getSessionUserId());
+
+        var activityLogForm = new CreateActivityLogForm();
+        activityLogForm.setOwningEntityId(productItem.getEntityId());
+        activityLogForm.setAction("Product item status update");
+        activityLogForm.setSessionUserId(editForm.getSessionUserId());
+
+        activityLogQueuingService.enqueueActivityLog(activityLogForm);
+
+        return updateProductItem;
+    }
+
+    public ProductItem updateProductStatus(String productItemId, ProductStatus newStatus, String statusUpdatedByEntityId) {
+        var productItem = findByEntityId(productItemId);
+
+        productItem.setStatus(newStatus);
+        productItem = save(productItem, statusUpdatedByEntityId);
+
+        return productItem;
     }
 
     @Autowired

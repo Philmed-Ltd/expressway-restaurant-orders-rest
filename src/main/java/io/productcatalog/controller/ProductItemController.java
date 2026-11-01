@@ -3,11 +3,14 @@ package io.productcatalog.controller;
 import io.lib.service.Message;
 import io.lib.view.EntityApiResponse;
 import io.lib.view.PagedEntityApiResponse;
+import io.productcatalog.entity.ProductStatus;
 import io.productcatalog.form.ProductItemEditForm;
 import io.productcatalog.form.ProductItemFetchForm;
 import io.productcatalog.form.ProductItemRegistrationForm;
+import io.productcatalog.form.ProductStatusEditingForm;
 import io.productcatalog.service.ProductItemEditService;
 import io.productcatalog.service.ProductItemReadService;
+import io.productcatalog.service.ProductStatusUpdateService;
 import io.productcatalog.view.ProductItemView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,7 @@ import static io.lib.service.SystemConfig.INTERNAL_USER_BASE_URL;
 public class ProductItemController {
     private ProductItemEditService productItemEditService;
     private ProductItemReadService productItemReadService;
+    private ProductStatusUpdateService productStatusUpdateService;
 
     @PreAuthorize("hasAuthority('REGISTER_PRODUCT_ITEM')")
     @PostMapping("register")
@@ -83,6 +87,23 @@ public class ProductItemController {
     ){
         var product = productItemReadService.findByEntityId(productItemId);
         return new EntityApiResponse<>(new ProductItemView(product));
+    }
+
+    @PreAuthorize("hasAuthority('UPDATE_PRODUCT_STATUS_TO_BLOCKED')")
+    @PutMapping("update-product-status-to-blocked/{productItemId}")
+    public EntityApiResponse<ProductItemView> updateProductStatusToBlocked(
+            @PathVariable String productItemId,
+            Authentication auth,
+            Locale locale) {
+        var form = new ProductStatusEditingForm();
+        form.setSessionUserId(auth.getName());
+        form.setStatus(ProductStatus.BLOCKED);
+
+        var productItem = productItemEditService.markProductStatusAsBlocked(productItemId, form);
+        return new EntityApiResponse<>(
+                Message.get("product.item.update.succeess", locale),
+                new ProductItemView(productItem)
+        );
     }
 
     @Autowired
