@@ -15,7 +15,7 @@ import java.lang.annotation.*;
 @Target( { ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE_USE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiredInternalUserStatus {
-    String message() default "Invalid status for this operation.";
+    String message() default "error.invalid.status";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
     UserStatus[] statuses();
