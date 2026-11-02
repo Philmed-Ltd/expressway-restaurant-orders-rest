@@ -14,7 +14,7 @@ import java.lang.annotation.*;
 @Target( { ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface InternalUserExists {
-    String message() default "Internal user does not exists.";
+    String message() default "error.internal.user.not.exists";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
