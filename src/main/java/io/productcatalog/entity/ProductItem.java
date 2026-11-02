@@ -37,7 +37,7 @@ public class ProductItem extends BaseJpaEntity {
     private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
-    private ProductStatus status = ProductStatus.ACTIVE;
+    private ProductStatus productStatus = ProductStatus.ACTIVE;
 
     public void setProductCategory(ProductCategory productCategory) {
         this.productCategory = productCategory;

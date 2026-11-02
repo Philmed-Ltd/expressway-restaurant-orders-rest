@@ -3,11 +3,14 @@ package io.productcatalog.controller;
 import io.lib.service.Message;
 import io.lib.view.EntityApiResponse;
 import io.lib.view.PagedEntityApiResponse;
+import io.productcatalog.entity.ProductStatus;
 import io.productcatalog.form.ProductItemEditForm;
 import io.productcatalog.form.ProductItemFetchForm;
 import io.productcatalog.form.ProductItemRegistrationForm;
 import io.productcatalog.service.ProductItemEditService;
 import io.productcatalog.service.ProductItemReadService;
+import io.productcatalog.service.ProductStatusUpdateService;
+import io.productcatalog.validator.RequiredProductItemStatus;
 import io.productcatalog.view.ProductItemView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,7 @@ import static io.lib.service.SystemConfig.INTERNAL_USER_BASE_URL;
 public class ProductItemController {
     private ProductItemEditService productItemEditService;
     private ProductItemReadService productItemReadService;
+    private ProductStatusUpdateService productStatusUpdateService;
 
     @PreAuthorize("hasAuthority('REGISTER_PRODUCT_ITEM')")
     @PostMapping("register")
@@ -55,7 +59,7 @@ public class ProductItemController {
         );
     }
 
-    @PreAuthorize("hasAuthority('LIST_PRODUCT_ITEM')")
+    @PreAuthorize("hasAuthority('VIEW_PRODUCT_ITEM')")
     @GetMapping("list")
     public PagedEntityApiResponse<ProductItemView> list(
             @RequestParam(name = "query", required = false)String query,
@@ -76,7 +80,7 @@ public class ProductItemController {
         return new PagedEntityApiResponse<>(page, views);
     }
 
-    @PreAuthorize("hasAuthority('LIST_PRODUCT_ITEM')")
+    @PreAuthorize("hasAuthority('VIEW_PRODUCT_ITEM')")
     @GetMapping("fetch/{productItemId}")
     public EntityApiResponse<ProductItemView> fetch(
             @PathVariable String productItemId
@@ -85,13 +89,48 @@ public class ProductItemController {
         return new EntityApiResponse<>(new ProductItemView(product));
     }
 
-    @Autowired
-    public void setProductItemEditService(ProductItemEditService productItemEditService) {
-        this.productItemEditService = productItemEditService;
+    @PreAuthorize("hasAuthority('UPDATE_PRODUCT_STATUS_TO_BLOCKED')")
+    @PutMapping("update-product-status-to-blocked/{productItemId}")
+    public EntityApiResponse<ProductItemView> updateProductStatusToBlocked(
+            @PathVariable
+            @RequiredProductItemStatus(
+                    status = { ProductStatus.ACTIVE },
+                    message = "error.product.not.active")
+            String productItemId,
+            Authentication auth,
+            Locale locale) {
+        productStatusUpdateService.updateProductStatusToBlocked(productItemId, auth.getName());
+        var productItem = productItemReadService.findByEntityId(productItemId);
+        return new EntityApiResponse<>(
+                Message.get("product.item.update.succeess", locale),
+                new ProductItemView(productItem)
+        );
+    }
+    @PreAuthorize("hasAuthority('UPDATE_PRODUCT_STATUS_TO_ACTIVE')")
+    @PutMapping("update-product-status-to-active/{productItemId}")
+    public EntityApiResponse<ProductItemView> updateProductStatusToActive(
+            @PathVariable
+            @RequiredProductItemStatus(
+                    status = { ProductStatus.BLOCKED },
+                    message = "error.product.not.blocked")
+            String productItemId,
+            Authentication auth,
+            Locale locale) {
+
+        productStatusUpdateService.updateProductStatusToActive(productItemId, auth.getName());
+        var productItem = productItemReadService.findByEntityId(productItemId);
+        return new EntityApiResponse<>(
+                Message.get("product.item.update.succeess", locale),
+                new ProductItemView(productItem)
+        );
     }
 
     @Autowired
-    public void setProductItemReadService(ProductItemReadService productItemReadService) {
-        this.productItemReadService = productItemReadService;
-    }
+    public void setProductItemEditService(ProductItemEditService productItemEditService) {this.productItemEditService = productItemEditService;}
+
+    @Autowired
+    public void setProductItemReadService(ProductItemReadService productItemReadService) {this.productItemReadService = productItemReadService;}
+
+    @Autowired
+    public void setProductStatusUpdateService(ProductStatusUpdateService productStatusUpdateService) {this.productStatusUpdateService = productStatusUpdateService;}
 }

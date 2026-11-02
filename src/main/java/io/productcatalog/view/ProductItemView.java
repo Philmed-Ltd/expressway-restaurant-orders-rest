@@ -15,7 +15,7 @@ public class ProductItemView extends BaseView<ProductItem>{
 
     public BigDecimal getPrice(){return entity.getPrice();}
 
-    public ProductStatus getStatus(){return entity.getStatus();}
+    public ProductStatus getProductStatus(){return entity.getProductStatus();}
 
     public String getImageUrl(){return entity.getImageUrl();}
 
