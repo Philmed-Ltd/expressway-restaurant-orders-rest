@@ -39,7 +39,7 @@ public class ProductItemController {
         var product = productItemEditService.registerItem(form);
 
         return new EntityApiResponse<>(
-                Message.get("product.item.registration.succeess", locale),
+                Message.get("product.item.registration.success", locale),
                 new ProductItemView(product)
         );
     }
@@ -54,7 +54,7 @@ public class ProductItemController {
         form.setSessionUserId(auth.getName());
         var product = productItemEditService.updateItem(productItemId, form);
         return new EntityApiResponse<>(
-                Message.get("product.item.update.succeess", locale),
+                Message.get("product.item.update.success", locale),
                 new ProductItemView(product)
         );
     }
@@ -102,7 +102,7 @@ public class ProductItemController {
         productStatusUpdateService.updateProductStatusToBlocked(productItemId, auth.getName());
         var productItem = productItemReadService.findByEntityId(productItemId);
         return new EntityApiResponse<>(
-                Message.get("product.item.update.succeess", locale),
+                Message.get("product.item.update.success", locale),
                 new ProductItemView(productItem)
         );
     }
@@ -120,7 +120,7 @@ public class ProductItemController {
         productStatusUpdateService.updateProductStatusToActive(productItemId, auth.getName());
         var productItem = productItemReadService.findByEntityId(productItemId);
         return new EntityApiResponse<>(
-                Message.get("product.item.update.succeess", locale),
+                Message.get("product.item.update.success", locale),
                 new ProductItemView(productItem)
         );
     }
