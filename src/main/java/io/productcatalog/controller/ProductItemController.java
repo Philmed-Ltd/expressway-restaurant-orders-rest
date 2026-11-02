@@ -57,7 +57,7 @@ public class ProductItemController {
         );
     }
 
-    @PreAuthorize("hasAuthority('LIST_PRODUCT_ITEM')")
+    @PreAuthorize("hasAuthority('VIEW_PRODUCT_ITEM')")
     @GetMapping("list")
     public PagedEntityApiResponse<ProductItemView> list(
             @RequestParam(name = "query", required = false)String query,
@@ -78,7 +78,7 @@ public class ProductItemController {
         return new PagedEntityApiResponse<>(page, views);
     }
 
-    @PreAuthorize("hasAuthority('LIST_PRODUCT_ITEM')")
+    @PreAuthorize("hasAuthority('VIEW_PRODUCT_ITEM')")
     @GetMapping("fetch/{productItemId}")
     public EntityApiResponse<ProductItemView> fetch(
             @PathVariable String productItemId
