@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-class ProductStatusUpdateValidator implements ConstraintValidator<ProductStatusUpdate, String> {
+class RequiredProductItemStatusValidator implements ConstraintValidator<RequiredProductItemStatus, String> {
 
     private List<ProductStatus> statuses;
 
     private ProductItemReadService productItemReadService;
 
     @Override
-    public void initialize(ProductStatusUpdate constraintAnnotation) {
+    public void initialize(RequiredProductItemStatus constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
         this.statuses = List.of(constraintAnnotation.status());
     }

@@ -7,12 +7,12 @@ import jakarta.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = {ProductStatusUpdateValidator.class})
+@Constraint(validatedBy = {RequiredProductItemStatusValidator.class})
 @Target({ ElementType.PARAMETER, ElementType.FIELD, ElementType.TYPE_USE })
 @Retention(RetentionPolicy.RUNTIME)
 
-public @interface ProductStatusUpdate {
-    String message() default "Invalid status for this operation.";
+public @interface RequiredProductItemStatus {
+    String message() default "error.invalid.status";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
     ProductStatus[] status();

@@ -10,7 +10,7 @@ import io.productcatalog.form.ProductItemRegistrationForm;
 import io.productcatalog.service.ProductItemEditService;
 import io.productcatalog.service.ProductItemReadService;
 import io.productcatalog.service.ProductStatusUpdateService;
-import io.productcatalog.validator.ProductStatusUpdate;
+import io.productcatalog.validator.RequiredProductItemStatus;
 import io.productcatalog.view.ProductItemView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +93,7 @@ public class ProductItemController {
     @PutMapping("update-product-status-to-blocked/{productItemId}")
     public EntityApiResponse<ProductItemView> updateProductStatusToBlocked(
             @PathVariable
-            @ProductStatusUpdate(
+            @RequiredProductItemStatus(
                     status = { ProductStatus.ACTIVE },
                     message = "error.product.not.active")
             String productItemId,
@@ -110,7 +110,7 @@ public class ProductItemController {
     @PutMapping("update-product-status-to-active/{productItemId}")
     public EntityApiResponse<ProductItemView> updateProductStatusToActive(
             @PathVariable
-            @ProductStatusUpdate(
+            @RequiredProductItemStatus(
                     status = { ProductStatus.BLOCKED },
                     message = "error.product.not.blocked")
             String productItemId,
