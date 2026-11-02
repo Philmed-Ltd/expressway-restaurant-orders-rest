@@ -3,12 +3,14 @@ package io.productcatalog.controller;
 import io.lib.service.Message;
 import io.lib.view.EntityApiResponse;
 import io.lib.view.PagedEntityApiResponse;
+import io.productcatalog.entity.ProductStatus;
 import io.productcatalog.form.ProductItemEditForm;
 import io.productcatalog.form.ProductItemFetchForm;
 import io.productcatalog.form.ProductItemRegistrationForm;
 import io.productcatalog.service.ProductItemEditService;
 import io.productcatalog.service.ProductItemReadService;
 import io.productcatalog.service.ProductStatusUpdateService;
+import io.productcatalog.validator.ProductStatusUpdate;
 import io.productcatalog.view.ProductItemView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,26 +92,32 @@ public class ProductItemController {
     @PreAuthorize("hasAuthority('UPDATE_PRODUCT_STATUS_TO_BLOCKED')")
     @PutMapping("update-product-status-to-blocked/{productItemId}")
     public EntityApiResponse<ProductItemView> updateProductStatusToBlocked(
-            @PathVariable String productItemId,
+            @PathVariable
+            @ProductStatusUpdate(
+                    status = { ProductStatus.ACTIVE },
+                    message = "error.product.not.active")
+            String productItemId,
             Authentication auth,
             Locale locale) {
         productStatusUpdateService.updateProductStatusToBlocked(productItemId, auth.getName());
-
         var productItem = productItemReadService.findByEntityId(productItemId);
         return new EntityApiResponse<>(
                 Message.get("product.item.update.succeess", locale),
                 new ProductItemView(productItem)
         );
     }
-
     @PreAuthorize("hasAuthority('UPDATE_PRODUCT_STATUS_TO_ACTIVE')")
     @PutMapping("update-product-status-to-active/{productItemId}")
     public EntityApiResponse<ProductItemView> updateProductStatusToActive(
-            @PathVariable String productItemId,
+            @PathVariable
+            @ProductStatusUpdate(
+                    status = { ProductStatus.BLOCKED },
+                    message = "error.product.not.blocked")
+            String productItemId,
             Authentication auth,
             Locale locale) {
-        productStatusUpdateService.updateProductStatusToActive(productItemId, auth.getName());
 
+        productStatusUpdateService.updateProductStatusToActive(productItemId, auth.getName());
         var productItem = productItemReadService.findByEntityId(productItemId);
         return new EntityApiResponse<>(
                 Message.get("product.item.update.succeess", locale),
@@ -118,14 +126,10 @@ public class ProductItemController {
     }
 
     @Autowired
-    public void setProductItemEditService(ProductItemEditService productItemEditService) {
-        this.productItemEditService = productItemEditService;
-    }
+    public void setProductItemEditService(ProductItemEditService productItemEditService) {this.productItemEditService = productItemEditService;}
 
     @Autowired
-    public void setProductItemReadService(ProductItemReadService productItemReadService) {
-        this.productItemReadService = productItemReadService;
-    }
+    public void setProductItemReadService(ProductItemReadService productItemReadService) {this.productItemReadService = productItemReadService;}
 
     @Autowired
     public void setProductStatusUpdateService(ProductStatusUpdateService productStatusUpdateService) {this.productStatusUpdateService = productStatusUpdateService;}

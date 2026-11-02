@@ -1,22 +1,33 @@
 package io.productcatalog.validator;
 
-import io.productcatalog.entity.ProductItem;
 import io.productcatalog.entity.ProductStatus;
-import org.springframework.stereotype.Component;
+import io.productcatalog.service.ProductItemReadService;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
 
-@Component
-public class ProductStatusUpdateValidator {
+@Service
+class ProductStatusUpdateValidator implements ConstraintValidator<ProductStatusUpdate, String> {
 
-    public void validateStatusToBlocked(ProductItem productItem) {
-        if (productItem.getStatus() != ProductStatus.ACTIVE) {
-            throw new IllegalStateException("Only active product items can be blocked.");
-        }
+    private List<ProductStatus> statuses;
+
+    private ProductItemReadService productItemReadService;
+
+    @Override
+    public void initialize(ProductStatusUpdate constraintAnnotation) {
+        ConstraintValidator.super.initialize(constraintAnnotation);
+        this.statuses = List.of(constraintAnnotation.status());
     }
 
-    public void validateStatusToActive(ProductItem productItem) {
-        if (productItem.getStatus() != ProductStatus.BLOCKED) {
-            throw new IllegalStateException("Only blocked product items can be activated.");
-        }
+    @Override
+    public boolean isValid(String productItemId, ConstraintValidatorContext ctx) {
+        var productItem = productItemReadService.findByEntityId(productItemId);
+        return statuses.contains(productItem.getStatus());
     }
+
+    @Autowired
+    public void setProductItemReadService(ProductItemReadService service) {this.productItemReadService = service;}
 }
