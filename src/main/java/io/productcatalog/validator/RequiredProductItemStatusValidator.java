@@ -25,7 +25,7 @@ class RequiredProductItemStatusValidator implements ConstraintValidator<Required
     @Override
     public boolean isValid(String productItemId, ConstraintValidatorContext ctx) {
         var productItem = productItemReadService.findByEntityId(productItemId);
-        return statuses.contains(productItem.getStatus());
+        return statuses.contains(productItem.getProductStatus());
     }
 
     @Autowired

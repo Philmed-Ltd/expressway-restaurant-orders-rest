@@ -13,13 +13,13 @@ public class ProductStatusUpdateService extends BaseJpaRepoEditService<ProductIt
 
     public ProductItem updateProductStatusToBlocked(String productItemEntityId, String currentUserEntityId) {
         var productItem = productItemReadService.findByEntityId(productItemEntityId);
-        productItem.setStatus(ProductStatus.BLOCKED);
+        productItem.setProductStatus(ProductStatus.BLOCKED);
         return save(productItem, currentUserEntityId);
     }
 
     public ProductItem updateProductStatusToActive(String productItemEntityId, String currentUserEntityId) {
         var productItem = productItemReadService.findByEntityId(productItemEntityId);
-        productItem.setStatus(ProductStatus.ACTIVE);
+        productItem.setProductStatus(ProductStatus.ACTIVE);
         return save(productItem, currentUserEntityId);
     }
 

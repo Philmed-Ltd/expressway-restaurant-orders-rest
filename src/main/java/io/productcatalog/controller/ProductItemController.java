@@ -99,11 +99,10 @@ public class ProductItemController {
             String productItemId,
             Authentication auth,
             Locale locale) {
-        productStatusUpdateService.updateProductStatusToBlocked(productItemId, auth.getName());
-        var productItem = productItemReadService.findByEntityId(productItemId);
+        var item =  productStatusUpdateService.updateProductStatusToBlocked(productItemId, auth.getName());
         return new EntityApiResponse<>(
                 Message.get("product.item.update.success", locale),
-                new ProductItemView(productItem)
+                new ProductItemView(item)
         );
     }
     @PreAuthorize("hasAuthority('UPDATE_PRODUCT_STATUS_TO_ACTIVE')")
@@ -117,11 +116,10 @@ public class ProductItemController {
             Authentication auth,
             Locale locale) {
 
-        productStatusUpdateService.updateProductStatusToActive(productItemId, auth.getName());
-        var productItem = productItemReadService.findByEntityId(productItemId);
+        var item = productStatusUpdateService.updateProductStatusToActive(productItemId, auth.getName());
         return new EntityApiResponse<>(
                 Message.get("product.item.update.success", locale),
-                new ProductItemView(productItem)
+                new ProductItemView(item)
         );
     }
 
