@@ -16,6 +16,7 @@ public interface ProductItemRepository extends BaseJpaRepository<ProductItem> {
     }
 
     default Specification<ProductItem> productCategoryIdIs(String productCategoryId) {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("productCategory"), productCategoryId));
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("productCategory").get("entityId"), productCategoryId);
     }
 }
