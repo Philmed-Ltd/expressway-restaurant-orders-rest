@@ -1,4 +1,4 @@
-package io.productcatalog.controller;
+package io.productcatalog.controller.internal;
 
 import io.lib.service.Message;
 import io.lib.view.EntityApiResponse;
@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
@@ -24,6 +25,7 @@ import static io.lib.service.SystemConfig.INTERNAL_USER_BASE_URL;
 
 @RestController
 @RequestMapping(INTERNAL_USER_BASE_URL + "/product-items")
+@Validated
 public class ProductItemController {
     private ProductItemEditService productItemEditService;
     private ProductItemReadService productItemReadService;

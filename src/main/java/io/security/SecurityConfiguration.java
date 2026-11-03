@@ -50,6 +50,8 @@ public class SecurityConfiguration  {
             SystemConfig.CUSTOMER_USER_BASE_URL + "/auth/init-login",
             SystemConfig.CUSTOMER_USER_BASE_URL + "/auth/complete-login/**",
 
+            SystemConfig.CUSTOMER_USER_BASE_URL + "/product-items/list/**",
+
             "/saf/stk-callback/**"
     };
 

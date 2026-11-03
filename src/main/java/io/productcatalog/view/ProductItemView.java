@@ -23,7 +23,7 @@ public class ProductItemView extends BaseView<ProductItem>{
 
     public String getProductCategoryName(){
         return entity.getProductCategory() == null
-                ? ""
+                ? null
                 : entity.getProductCategory().getName();
     }
 }

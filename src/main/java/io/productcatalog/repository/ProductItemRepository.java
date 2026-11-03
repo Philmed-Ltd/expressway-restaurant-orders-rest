@@ -2,6 +2,7 @@ package io.productcatalog.repository;
 
 import io.lib.repository.BaseJpaRepository;
 import io.productcatalog.entity.ProductItem;
+import io.productcatalog.entity.ProductStatus;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
@@ -17,5 +18,9 @@ public interface ProductItemRepository extends BaseJpaRepository<ProductItem> {
 
     default Specification<ProductItem> productCategoryIdIs(String productCategoryId) {
         return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("productCategory"), productCategoryId));
+    }
+
+    default Specification<ProductItem> productStatusIs(ProductStatus productStatus) {
+        return ((root, cq, cb) -> cb.equal(root.get("productStatus"), productStatus));
     }
 }
