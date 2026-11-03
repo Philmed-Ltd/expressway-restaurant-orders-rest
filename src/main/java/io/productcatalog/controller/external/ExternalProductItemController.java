@@ -21,14 +21,14 @@ public class ExternalProductItemController {
     @GetMapping("list")
     public PagedEntityApiResponse<ProductItemView> list(
         @RequestParam(name = "query", required = false)String query,
-        @RequestParam(name = "productCategoryId", required = false)String productCategoryId,
+        @RequestParam(name = "productCategoryEntityId", required = false)String productCategoryEntityId,
         @RequestParam(name = "PageNum", required = false, defaultValue = "0")Integer pageNum,
         @RequestParam(name = "pageSize", required = false, defaultValue = "100")Integer pageSize){
 
         var form = new ProductItemFetchForm();
         form.setProductStatus(ProductStatus.ACTIVE);
         form.setQuery(query);
-        form.setProductCategoryId(productCategoryId);
+        form.setProductCategoryEntityId(productCategoryEntityId);
         form.setPageNum(pageNum);
         form.setPageSize(pageSize);
 

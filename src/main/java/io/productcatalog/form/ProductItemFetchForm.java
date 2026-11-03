@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProductItemFetchForm extends BaseFetchForm {
-    private String productCategoryId;
+    private String productCategoryEntityId;
     private ProductStatus productStatus;
 }

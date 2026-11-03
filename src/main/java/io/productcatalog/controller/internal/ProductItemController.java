@@ -65,14 +65,16 @@ public class ProductItemController {
     @GetMapping("list")
     public PagedEntityApiResponse<ProductItemView> list(
             @RequestParam(name = "query", required = false)String query,
-            @RequestParam(name = "productCategoryId", required = false)String productCategoryId,
+            @RequestParam(name = "productCategoryEntityId", required = false)String productCategoryEntityId,
+            @RequestParam(name = "productStatus", required = false)ProductStatus productStatus,
             @RequestParam(name = "PageNum", required = false, defaultValue = "0")Integer pageNum,
             @RequestParam(name = "pageSize", required = false, defaultValue = "100")Integer pageSize,
             Authentication auth
     ){
         var form = new ProductItemFetchForm();
         form.setQuery(query);
-        form.setProductCategoryId(productCategoryId);
+        form.setProductCategoryEntityId(productCategoryEntityId);
+        form.setProductStatus(productStatus);
         form.setPageNum(pageNum);
         form.setPageSize(pageSize);
         form.setSessionUserId(auth.getName());

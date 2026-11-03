@@ -12,20 +12,20 @@ import org.springframework.stereotype.Service;
 public class ProductItemReadService extends BaseJpaRepoReadService<ProductItem, ProductItemRepository> {
 
     public Page<ProductItem> listProductItems(ProductItemFetchForm form) {
-        var spec = repository.notDeleted();
+        var specification = repository.notDeleted();
 
         if(StringUtils.isNotBlank(form.getQuery())){
-            spec = spec.and(repository.nameLike(form.getQuery()));
+            specification = specification.and(repository.nameLike(form.getQuery()));
         }
 
-        if(form.getProductCategoryId() != null){
-            spec = spec.and(repository.productCategoryIdIs(form.getProductCategoryId()));
+        if(form.getProductCategoryEntityId() != null){
+            specification = specification.and(repository.productCategoryEntityIdIs(form.getProductCategoryEntityId()));
         }
 
-        if(form.getProductStatus() != null){
-            spec = spec.and(repository.productStatusIs(form.getProductStatus()));
+        if (form.getProductStatus() != null) {
+            specification = specification.and(repository.productStatusIs(form.getProductStatus()));
         }
 
-        return repository.findAll(spec, repository.defaultPageable(form));
+        return repository.findAll(specification, repository.defaultPageable(form));
     }
 }
