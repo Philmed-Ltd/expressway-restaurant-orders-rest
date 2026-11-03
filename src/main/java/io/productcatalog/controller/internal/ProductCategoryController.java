@@ -1,4 +1,4 @@
-package io.productcatalog.controller;
+package io.productcatalog.controller.internal;
 
 import io.lib.form.BaseFetchForm;
 import io.lib.service.Message;
