@@ -18,8 +18,12 @@ public class ProductItemReadService extends BaseJpaRepoReadService<ProductItem, 
             specification = specification.and(repository.nameLike(form.getQuery()));
         }
 
-        if(form.getProductCategoryId() != null){
-            specification = specification.and(repository.productCategoryIdIs(form.getProductCategoryId()));
+        if(form.getProductCategoryEntityId() != null){
+            specification = specification.and(repository.productCategoryEntityIdIs(form.getProductCategoryEntityId()));
+        }
+
+        if (form.getProductStatus() != null) {
+            specification = specification.and(repository.productStatusIs(form.getProductStatus()));
         }
 
         return repository.findAll(specification, repository.defaultPageable(form));
