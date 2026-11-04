@@ -20,6 +20,8 @@ public class SaleOrderItemView {
 
     public String getProductItemName() { return productItem.getName(); }
 
+    public Double getQuantity() { return quantity; }
+
     public String getProductItemUrl() { return productItem.getImageUrl(); }
 
     public java.math.BigDecimal getLineTotal() {
