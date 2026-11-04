@@ -24,6 +24,8 @@ public class SalesOrderView extends BaseView<SalesOrder> {
 
     public String getCustomerPhoneNumber() { return entity.getCustomer().getPhoneNumber(); }
 
+    public String getCustomerEmail() { return entity.getCustomer().getEmail(); }
+
     public DeliveryAddress getAddress() { return entity.getDeliveryAddress(); }
 
     public List<SaleOrderItemView> getSaleOrderItems() { return this.saleOrderItems; }
