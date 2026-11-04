@@ -1,32 +1,30 @@
 package io.salesorder.view;
 
-import io.productcatalog.entity.ProductItem;
+import io.lib.view.BaseView;
 import io.salesorder.entity.SaleOrderItem;
 
-public class SaleOrderItemView {
+import java.math.BigDecimal;
 
-    private final String saleOrderItemId;
-    private final ProductItem productItem;
+public class SaleOrderItemView extends BaseView<SaleOrderItem> {
 
-    private final Double quantity;
-
-    public SaleOrderItemView(SaleOrderItem saleOrderItem) {
-        this.saleOrderItemId = saleOrderItem.getEntityId();
-        this.productItem = saleOrderItem.getProductItem();
-        this.quantity = saleOrderItem.getQuantity();
+    public SaleOrderItemView(SaleOrderItem entity) {
+        super(entity);
     }
 
-    public String getSaleOrderItemId() { return saleOrderItemId; }
+    public String getSaleOrderItemId() { return entity.getEntityId(); }
 
-    public String getProductItemName() { return productItem.getName(); }
+    public String getProductItemName() { return entity.getProductItem().getName(); }
 
-    public Double getQuantity() { return quantity; }
+    public Double getQuantity() { return entity.getQuantity(); }
 
-    public String getProductItemUrl() { return productItem.getImageUrl(); }
+    public String getProductItemUrl() { return entity.getProductItem().getImageUrl(); }
 
-    public java.math.BigDecimal getLineTotal() {
-        if (productItem.getPrice() == null || quantity == null) return java.math.BigDecimal.ZERO;
-        return productItem.getPrice().multiply(java.math.BigDecimal.valueOf(quantity));
+    public BigDecimal getLineTotal() {
+        var productItem = entity.getProductItem();
+        if (productItem.getPrice() == null || entity.getQuantity() == null) {
+            return BigDecimal.ZERO;
+        }
+        return productItem.getPrice().multiply(BigDecimal.valueOf(entity.getQuantity()));
     }
 }
 
