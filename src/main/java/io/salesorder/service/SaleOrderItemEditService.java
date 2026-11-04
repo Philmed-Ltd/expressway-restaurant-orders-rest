@@ -27,6 +27,7 @@ public class SaleOrderItemEditService  extends BaseJpaRepoEditService<SaleOrderI
             saleOrderItem.setProductItem(productItem);
             saleOrderItem.setProductItemEntityId(item.getProductItemEntityId());
             saleOrderItem.setQuantity(item.getQuantity());
+            saleOrderItem.setProductPrice(productItem.getPrice());
             saleOrderItems.add(saleOrderItem);
         }
         save(saleOrderItems, salesOrder.getUpdatedByEntityId());

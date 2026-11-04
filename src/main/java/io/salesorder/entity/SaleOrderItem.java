@@ -9,6 +9,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Entity
@@ -30,6 +32,8 @@ public class SaleOrderItem extends BaseJpaEntity {
     private Double quantity;
 
     private String productItemEntityId;
+
+    private BigDecimal productPrice;
 
     public void setSalesOrder(SalesOrder salesOrder) {
         this.salesOrder = salesOrder;
