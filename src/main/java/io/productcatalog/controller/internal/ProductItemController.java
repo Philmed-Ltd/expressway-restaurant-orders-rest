@@ -97,15 +97,13 @@ public class ProductItemController {
     @PutMapping("update-product-status-to-blocked/{productItemId}")
     public EntityApiResponse<ProductItemView> updateProductStatusToBlocked(
             @PathVariable
-            @RequiredProductItemStatus(
-                    status = { ProductStatus.ACTIVE },
-                    message = "error.product.not.active")
+            @RequiredProductItemStatus(status = { ProductStatus.ACTIVE })
             String productItemId,
             Authentication auth,
             Locale locale) {
         var item =  productStatusUpdateService.updateProductStatusToBlocked(productItemId, auth.getName());
         return new EntityApiResponse<>(
-                Message.get("product.item.update.success", locale),
+                Message.get("product.item.blockage.success", locale),
                 new ProductItemView(item)
         );
     }
@@ -113,16 +111,14 @@ public class ProductItemController {
     @PutMapping("update-product-status-to-active/{productItemId}")
     public EntityApiResponse<ProductItemView> updateProductStatusToActive(
             @PathVariable
-            @RequiredProductItemStatus(
-                    status = { ProductStatus.BLOCKED },
-                    message = "error.product.not.blocked")
+            @RequiredProductItemStatus(status = { ProductStatus.BLOCKED })
             String productItemId,
             Authentication auth,
             Locale locale) {
 
         var item = productStatusUpdateService.updateProductStatusToActive(productItemId, auth.getName());
         return new EntityApiResponse<>(
-                Message.get("product.item.update.success", locale),
+                Message.get("product.item.activation.success", locale),
                 new ProductItemView(item)
         );
     }
