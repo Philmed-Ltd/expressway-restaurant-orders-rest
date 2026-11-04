@@ -9,7 +9,6 @@ import io.salesorder.service.SalesOrderEditService;
 import io.salesorder.view.SalesOrderView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +27,6 @@ public class ExternalSalesOrderController {
     private SalesOrderEditService salesOrderEditService;
     private SaleOrderItemReadService saleOrderItemReadService;
 
-    @PreAuthorize("hasAuthority('REGISTER_SALES_ORDER')")
     @PostMapping("register")
     public EntityApiResponse<SalesOrderView> registerSalesOrder(
             @RequestBody @Valid RegisterSalesOrderForm form,
