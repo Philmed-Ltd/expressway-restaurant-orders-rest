@@ -9,10 +9,10 @@ import java.util.Collection;
 public interface SaleOrderItemRepository extends BaseJpaRepository<SaleOrderItem> {
 
     default Specification<SaleOrderItem> byOrderId(String orderId) {
-        return (root, query, cb) -> cb.equal(root.get("entityId"), orderId);
+        return (root, query, cb) -> cb.equal(root.get("salesOrderEntityId"), orderId);
     }
 
     default Specification<SaleOrderItem> byOrderIds(Collection<String> orderIds) {
-        return (root, query, cb) -> root.get("entityId").in(orderIds);
+        return (root, query, cb) -> root.get("salesOrderEntityId").in(orderIds);
     }
 }
