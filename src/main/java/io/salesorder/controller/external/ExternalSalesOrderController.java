@@ -1,4 +1,4 @@
-package io.salesorder.controller;
+package io.salesorder.controller.external;
 
 import io.lib.service.Message;
 import io.lib.view.EntityApiResponse;
@@ -23,7 +23,7 @@ import static io.lib.service.SystemConfig.CUSTOMER_USER_BASE_URL;
 
 @RestController
 @RequestMapping(CUSTOMER_USER_BASE_URL + "/sales-orders")
-public class SalesOrderController {
+public class ExternalSalesOrderController {
 
     private SalesOrderEditService salesOrderEditService;
     private SaleOrderItemReadService saleOrderItemReadService;
