@@ -1,21 +1,18 @@
 package io.salesorder.controller.external;
 
+import io.lib.form.BaseFetchForm;
 import io.lib.service.Message;
 import io.lib.view.EntityApiResponse;
-import io.salesorder.entity.SaleOrderItem;
+import io.lib.view.PagedEntityApiResponse;
 import io.salesorder.form.RegisterSalesOrderForm;
-import io.salesorder.service.SaleOrderItemReadService;
 import io.salesorder.service.SalesOrderEditService;
-import io.salesorder.view.SalesOrderView;
+import io.salesorder.service.SalesOrderReadService;
+import io.salesorder.view.CustomerSalesOrderView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Locale;
 
 import static io.lib.service.SystemConfig.CUSTOMER_USER_BASE_URL;
@@ -25,20 +22,37 @@ import static io.lib.service.SystemConfig.CUSTOMER_USER_BASE_URL;
 public class ExternalSalesOrderController {
 
     private SalesOrderEditService salesOrderEditService;
-    private SaleOrderItemReadService saleOrderItemReadService;
+    private SalesOrderReadService salesOrderReadService;
 
     @PostMapping("register")
-    public EntityApiResponse<SalesOrderView> registerSalesOrder(
+    public EntityApiResponse<CustomerSalesOrderView> registerSalesOrder(
             @RequestBody @Valid RegisterSalesOrderForm form,
             Authentication auth,
             Locale locale) {
         form.setSessionUserId(auth.getName());
         var salesOrder = salesOrderEditService.registerSalesOrder(form);
-        List<SaleOrderItem> items = saleOrderItemReadService.getByOrderId(salesOrder.getEntityId());
         return new EntityApiResponse<>(
                 Message.get("sales.order.registration.success", locale),
-                new SalesOrderView(salesOrder, items)
+                new CustomerSalesOrderView(salesOrder)
         );
+    }
+
+    @GetMapping("list")
+    public PagedEntityApiResponse<CustomerSalesOrderView> listMyOrders(
+            @RequestParam(name = "pageNum", required = false, defaultValue = "0") Integer pageNum,
+            @RequestParam(name = "pageSize", required = false, defaultValue = "20") Integer pageSize,
+            Authentication auth
+    ) {
+        var form = new BaseFetchForm();
+        form.setPageNum(pageNum);
+        form.setPageSize(pageSize);
+
+        var page = salesOrderReadService.listSalesOrdersForCustomer(auth.getName(), form);
+        var views = page.stream()
+                .map(CustomerSalesOrderView::new)
+                .toList();
+
+        return new PagedEntityApiResponse<>(page, views);
     }
 
     @Autowired
@@ -47,5 +61,7 @@ public class ExternalSalesOrderController {
     }
 
     @Autowired
-    private void setSaleOrderItemReadService(SaleOrderItemReadService service){ this.saleOrderItemReadService = service; }
+    public void setSalesOrderReadService(SalesOrderReadService service){
+        this.salesOrderReadService = service;
+    }
 }

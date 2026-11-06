@@ -1,5 +1,6 @@
 package io.salesorder.view;
 
+import io.lib.service.FormatUtil;
 import io.lib.view.BaseView;
 import io.salesorder.entity.SaleOrderItem;
 
@@ -20,11 +21,14 @@ public class SaleOrderItemView extends BaseView<SaleOrderItem> {
     public String getProductItemUrl() { return entity.getProductItem().getImageUrl(); }
 
     public BigDecimal getLineTotal() {
-        var productItem = entity.getProductItem();
-        if (productItem.getPrice() == null || entity.getQuantity() == null) {
+        if (entity.getProductPrice() == null || entity.getQuantity() == null) {
             return BigDecimal.ZERO;
         }
-        return productItem.getPrice().multiply(BigDecimal.valueOf(entity.getQuantity()));
+
+        return entity.getProductPrice().multiply(
+            BigDecimal.valueOf(entity.getQuantity()),
+                FormatUtil.ROUND_UP_MATH_CONTEXT
+        );
     }
 }
 
