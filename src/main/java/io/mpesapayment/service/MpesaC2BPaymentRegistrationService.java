@@ -4,9 +4,11 @@ import io.lib.exception.CommonRuntimeException;
 import io.lib.exception.ExceptionType;
 import io.lib.service.BaseJpaRepoEditService;
 import io.mpesapayment.entity.MpesaC2BPayment;
+import io.mpesapayment.exception.PaymentException;
 import io.mpesapayment.form.MpesaC2BPaymentForm;
 import io.mpesapayment.repository.MpesaC2BPaymentRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 @Service
 @Slf4j
 public class MpesaC2BPaymentRegistrationService extends BaseJpaRepoEditService<MpesaC2BPayment, MpesaC2BPaymentRepository> {
+    public MpesaTransactionValidationService mpesaTransactionValidationService;
 
     public void registerPayment(MpesaC2BPaymentForm form){
 
@@ -51,7 +54,15 @@ public class MpesaC2BPaymentRegistrationService extends BaseJpaRepoEditService<M
 
         save(transaction);
 
+        try {
+            mpesaTransactionValidationService.queryTransactionStatus(transaction.getTransactionId());
+        }catch (PaymentException e){
+            log.error("Error initializing payment validation\n{}", e.getMessage());
+        }
     }
 
-
+    @Autowired
+    public void setMpesaTransactionStatusService (MpesaTransactionValidationService mpesaTransactionValidationService){
+        this.mpesaTransactionValidationService = mpesaTransactionValidationService;
+    }
 }

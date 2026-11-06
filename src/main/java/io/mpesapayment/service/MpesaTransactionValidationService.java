@@ -22,7 +22,6 @@ import org.springframework.web.client.RestTemplate;
 
 import tools.jackson.databind.ObjectMapper;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -81,6 +80,7 @@ public class MpesaTransactionValidationService
             validation.setShortcode(form.getShortcode());
             validation.setTransactionId(form.getTransactionId());
             validation.setOriginatorConversationId(form.getOriginatorConversationId());
+            log.info("in conv id {}",validation.getOriginatorConversationId());
 
             validation = save(validation);
 
@@ -101,6 +101,11 @@ public class MpesaTransactionValidationService
                 String conversationId = responseBody.getAsString("ConversationID");
                 if (StringUtils.isNotBlank(conversationId)) {
                     validation.setConversationId(conversationId);
+                }
+
+                String returnedOriginatorId = responseBody.getAsString("OriginatorConversationID");
+                if (StringUtils.isNotBlank(returnedOriginatorId)) {
+                    validation.setOriginatorConversationId(returnedOriginatorId);
                 }
                 save(validation);
             }else{

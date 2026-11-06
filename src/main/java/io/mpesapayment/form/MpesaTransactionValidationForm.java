@@ -19,7 +19,7 @@ public class MpesaTransactionValidationForm {
     @JsonProperty("TransactionID")
     private String transactionId;
 
-    @JsonProperty("OriginatorConversationID")
+    @JsonProperty("OriginalConversationID")
     private String originatorConversationId;
 
     @JsonProperty("PartyA")
@@ -38,5 +38,5 @@ public class MpesaTransactionValidationForm {
     private String remarks = "Transaction status query";
 
     @JsonProperty("Occasion")
-    private String occasion = "BnB payment verification";
+    private String occasion = "Restaurant payment verification";
 }
