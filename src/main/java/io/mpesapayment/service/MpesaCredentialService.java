@@ -85,6 +85,14 @@ class MpesaCredentialService {
         }
         return accessToken;
     }
+    String formatMpesaPaymentPhoneNumber(String phoneNumber) {
+        if (phoneNumber.startsWith("+254")) {
+            phoneNumber = phoneNumber.replace("+254", "254");
+        } else if (phoneNumber.startsWith("0")) {
+            phoneNumber = "254" + phoneNumber.substring(1);
+        }
+        return phoneNumber;
+    }
 
     @Value("${mpesa.access.token.url}")
     public void setMpesaAccessTokenUrl(String url) {
