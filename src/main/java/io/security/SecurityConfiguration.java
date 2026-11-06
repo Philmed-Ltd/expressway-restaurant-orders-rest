@@ -52,6 +52,7 @@ public class SecurityConfiguration  {
 
             SystemConfig.CUSTOMER_USER_BASE_URL + "/product-items/list/**",
             SystemConfig.CUSTOMER_USER_BASE_URL + "/product-categories/list/**",
+            "/saf/c2b/register-payment",
 
             "/saf/stk-callback/**"
     };
