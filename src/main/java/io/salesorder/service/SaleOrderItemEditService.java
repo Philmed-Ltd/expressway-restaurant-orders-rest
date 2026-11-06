@@ -17,10 +17,9 @@ public class SaleOrderItemEditService  extends BaseJpaRepoEditService<SaleOrderI
 
     private ProductItemReadService productItemReadService;
 
-    public void registerSaleOrderItems(SalesOrder salesOrder, List<SaleOrderItemForm> items){
-
+    public void registerSaleOrderItems(SalesOrder salesOrder, List<SaleOrderItemForm> items) {
         List<SaleOrderItem> saleOrderItems = new ArrayList<>();
-        for(var item: items){
+        for (var item : items) {
             var productItem = productItemReadService.findByEntityId(item.getProductItemEntityId());
             var saleOrderItem = new SaleOrderItem();
             saleOrderItem.setSalesOrder(salesOrder);
@@ -30,7 +29,8 @@ public class SaleOrderItemEditService  extends BaseJpaRepoEditService<SaleOrderI
             saleOrderItem.setProductPrice(productItem.getPrice());
             saleOrderItems.add(saleOrderItem);
         }
-        save(saleOrderItems, salesOrder.getUpdatedByEntityId());
+        var salesOrderItems = save(saleOrderItems, salesOrder.getUpdatedByEntityId());
+        salesOrder.setSalesOrderItems(salesOrderItems);
     }
 
     @Autowired
