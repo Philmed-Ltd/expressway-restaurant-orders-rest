@@ -71,12 +71,14 @@ public class MpesaSTKPushService extends BaseJpaRepoEditService<MpesaSTKPayment,
 
         try {
             var httpRequest = new HttpEntity<>(initForm ,httpHeaders);
+            log.info("prep to sent");
             var response = restTemplate.exchange(
                     mpesaStkPushRequestUrl,
                     HttpMethod.POST,
                     httpRequest,
                     JSONObject.class
             );
+            log.info("sent the stk");
             var entityResponse = response.getBody();
             var transaction = new MpesaSTKPayment();
             transaction.setAccountReference(paymentForm.getAccountReference());
@@ -108,6 +110,9 @@ public class MpesaSTKPushService extends BaseJpaRepoEditService<MpesaSTKPayment,
     }
 
     public void handleSTKPushCallback(JSONObject callback) throws PaymentException{
+        log.info("i have been hit");
+        log.info("Full STK Push Callback: {}", callback.toJSONString());
+
         LinkedHashMap<String, Object> body = (LinkedHashMap<String, Object>) callback.get("Body");
         LinkedHashMap<String, Object> stkCallback = (LinkedHashMap<String, Object>) body.get("stkCallback");
 
@@ -126,6 +131,7 @@ public class MpesaSTKPushService extends BaseJpaRepoEditService<MpesaSTKPayment,
             stkPush.setMpesaSTKPushPaymentStatus(MpesaSTKPushPaymentStatus.PAYMENT_FAILED);
         }
         save(stkPush);
+        log.info("stk saved");
 
         if (stkPush.getMpesaSTKPushPaymentStatus() == MpesaSTKPushPaymentStatus.PAYMENT_SUCCESSFUL) {
             LinkedHashMap<String, Object> metadata = (LinkedHashMap<String, Object>) stkCallback.get("CallbackMetadata");
