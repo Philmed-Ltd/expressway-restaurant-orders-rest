@@ -76,7 +76,6 @@ public class MpesaSTKPushService extends BaseJpaRepoEditService<MpesaSTKPayment,
             );
             var entityResponse = response.getBody();
             var transaction = new MpesaSTKPayment();
-            transaction.setInitiatorIdentifier(paymentForm.getInitiatorIdentifier());
             transaction.setAccountReference(paymentForm.getAccountReference());
             transaction.setParentBusinessShortCode(businessShortCode);
             transaction.setChildBusinessShortCode(paymentForm.getChildBusinessShortCode());

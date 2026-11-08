@@ -1,0 +1,21 @@
+package io.salesorder.form;
+
+import io.lib.form.SessionUserIdForm;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+
+
+@Getter
+@Setter
+public class SaleOrderPaymentForm extends SessionUserIdForm {
+
+    @NotBlank(message = "error.invalid.mpesa.phone.number")
+    private String mpesaPhoneNumber;
+
+    @DecimalMin(value = "1", message = "error.invalid.amount")
+    private BigDecimal amount;
+}

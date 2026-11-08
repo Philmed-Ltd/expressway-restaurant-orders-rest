@@ -11,8 +11,6 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class MpesaPaymentForm extends SessionUserIdForm {
-    @NotBlank(message = "error.invalid.initiator.identifier")
-    private String initiatorIdentifier;
 
     @NotBlank(message = "error.invalid.account.reference")
     private String accountReference;

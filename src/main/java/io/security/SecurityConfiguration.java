@@ -56,6 +56,7 @@ public class SecurityConfiguration  {
             "/saf/c2b/transaction-status/result",
             "/saf/c2b/transaction-status/timeout",
             "/saf/c2b/initiate-stk-push",
+            "/saf/c2b/handle-stk-push-callback",
 
             "/saf/stk-callback/**"
     };

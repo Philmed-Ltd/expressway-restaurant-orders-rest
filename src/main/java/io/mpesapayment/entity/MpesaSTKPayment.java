@@ -16,7 +16,6 @@ import java.math.BigDecimal;
         indexes = {@Index(name = "idx_initiator_identifier", columnList = "initiatorIdentifier")}
 )
 public class MpesaSTKPayment extends BaseJpaEntity {
-    private String initiatorIdentifier;
     private String phoneNumber;
     private String transactionId;
     private String parentBusinessShortCode;
