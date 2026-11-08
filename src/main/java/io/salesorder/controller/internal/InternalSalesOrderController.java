@@ -40,7 +40,7 @@ public class InternalSalesOrderController {
 
         return new PagedEntityApiResponse<>(page, views);
     }
-   // @PreAuthorize("hasAuthority('VIEW_SALES_ORDERS')")
+    @PreAuthorize("hasAuthority('VIEW_SALES_ORDERS')")
     @GetMapping("list/payments/{salesOrderId}")
     public PagedEntityApiResponse<SalesOrderPaymentView> listPayments(
             @PathVariable String salesOrderId,

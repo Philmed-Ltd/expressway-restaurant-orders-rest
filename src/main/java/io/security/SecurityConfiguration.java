@@ -39,7 +39,7 @@ public class SecurityConfiguration  {
             SystemConfig.INTERNAL_USER_BASE_URL + "/verification-code/request",
             SystemConfig.INTERNAL_USER_BASE_URL + "/verification-code/resend/**",
             SystemConfig.INTERNAL_USER_BASE_URL + "/auth/reset-password/**",
-            SystemConfig.INTERNAL_USER_BASE_URL + "/**",
+            SystemConfig.INTERNAL_USER_BASE_URL + "/auth/init-login",
             SystemConfig.INTERNAL_USER_BASE_URL + "/auth/complete-login/**",
             SystemConfig.INTERNAL_USER_BASE_URL + "/auth/update-public-key",
 
@@ -52,8 +52,6 @@ public class SecurityConfiguration  {
 
             SystemConfig.CUSTOMER_USER_BASE_URL + "/product-items/list/**",
             SystemConfig.CUSTOMER_USER_BASE_URL + "/product-categories/list/**",
-            SystemConfig.CUSTOMER_USER_BASE_URL + "/sales-orders/**",
-
             "/saf/c2b/register-payment",
             "/saf/c2b/transaction-status/result",
             "/saf/c2b/transaction-status/timeout",

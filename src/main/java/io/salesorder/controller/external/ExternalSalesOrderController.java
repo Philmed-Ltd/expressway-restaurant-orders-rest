@@ -47,9 +47,9 @@ public class ExternalSalesOrderController {
            @RequestBody
            @Valid
            SaleOrderPaymentForm form,
-           //Authentication auth,
+           Authentication auth,
            Locale locale) throws PaymentException {
-        //form.setSessionUserId(auth.getName());
+        form.setSessionUserId(auth.getName());
         salesOrderEditService.initializePayment(salesOrderId, form);
         return new ApiResponse(Message.get("payment.initialization.success", locale));
     }
