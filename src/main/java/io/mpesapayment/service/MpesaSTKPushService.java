@@ -5,6 +5,7 @@ import io.lib.exception.ExceptionType;
 import io.lib.service.BaseJpaRepoEditService;
 import io.mpesapayment.entity.MpesaSTKPayment;
 import io.mpesapayment.entity.MpesaSTKPushPaymentStatus;
+import io.mpesapayment.entity.Payment;
 import io.mpesapayment.exception.PaymentException;
 import io.mpesapayment.form.MpesaPaymentForm;
 import io.mpesapayment.form.MpesaSTKPushInitForm;
@@ -38,6 +39,8 @@ public class MpesaSTKPushService extends BaseJpaRepoEditService<MpesaSTKPayment,
     private String mpesaStkPushRequestUrl;
     public String businessShortCode;
     public String stkPushCallbackUrl;
+    private List<PaymentListener> paymentListeners;
+
 
     public void stkInitialization(MpesaPaymentForm paymentForm)
             throws PaymentException {
@@ -160,7 +163,18 @@ public class MpesaSTKPushService extends BaseJpaRepoEditService<MpesaSTKPayment,
     }
 
     private void doOnSuccessfulPayment(MpesaSTKPayment stkPayment){
+        var payment = new Payment();
+        payment.setAccountReference(stkPayment.getAccountReference());
+        payment.setTransactionId(stkPayment.getTransactionId());
+        payment.setAmount(stkPayment.getAmount());
 
+        for(PaymentListener listener: paymentListeners){
+            try {
+                listener.onSuccessfulPayment(payment);
+            }catch (Exception e){
+                log.error("Error occurred while processing payment", e);
+            }
+        }
     }
 
     @Autowired
@@ -173,7 +187,10 @@ public class MpesaSTKPushService extends BaseJpaRepoEditService<MpesaSTKPayment,
         this.restTemplate = restTemplate;
     }
 
-
+    @Autowired
+    public void setPaymentListeners(List<PaymentListener> paymentListeners) {
+        this.paymentListeners = paymentListeners;
+    }
 
     @Value("${mpesa.c2b.shortcode}")
     public void setBusinessShortCode(String businessShortCode) {

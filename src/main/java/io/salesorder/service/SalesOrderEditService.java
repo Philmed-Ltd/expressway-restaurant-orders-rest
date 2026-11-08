@@ -44,6 +44,8 @@ public class SalesOrderEditService extends BaseJpaRepoEditService<SalesOrder, Sa
     }
 
     public void initializePayment(String saleOrderId, SaleOrderPaymentForm form) throws PaymentException {
+        var salesOrder = findByEntityId(saleOrderId);
+        salesOrder = save(salesOrder, form.getSessionUserId());
 
         var mpesaPaymentForm = new MpesaPaymentForm();
         mpesaPaymentForm.setAccountReference(saleOrderId);
@@ -53,6 +55,12 @@ public class SalesOrderEditService extends BaseJpaRepoEditService<SalesOrder, Sa
         mpesaPaymentForm.setSessionUserId(form.getSessionUserId());
 
         mpesaSTKPushService.stkInitialization(mpesaPaymentForm);
+
+        var activityLogForm = new CreateActivityLogForm();
+        activityLogForm.setOwningEntityId(salesOrder.getEntityId());
+        activityLogForm.setAction("Initialize payment");
+        activityLogForm.setSessionUserId(form.getSessionUserId());
+        activityLogQueuingService.enqueueActivityLog(activityLogForm);
 
     }
 
