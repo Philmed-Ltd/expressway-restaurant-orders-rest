@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -41,6 +42,8 @@ public class MpesaTransactionValidationService
     private String mpesaTransactionValidationCallbackUrl;
 
     private String mpesaTransactionValidationTimeoutUrl;
+    private List<MpesaTransactionValidationListener> validationListeners;
+
 
     public void queryTransactionStatus(String transactionId) throws PaymentException {
         if (transactionId == null || transactionId.isBlank()) {
@@ -160,7 +163,8 @@ public class MpesaTransactionValidationService
             validation.setValidationStatus(MpesaValidationStatus.FAILED);
         }
 
-        save(validation);
+        validation = save(validation);
+        notifyOnProcessingValidationCallback(validation);
     }
 
     public void transactionStatusTimeout (JSONObject callback) throws PaymentException {
@@ -191,6 +195,16 @@ public class MpesaTransactionValidationService
         );
     }
 
+    private void notifyOnProcessingValidationCallback(MpesaTransactionValidation validation){
+        for(MpesaTransactionValidationListener listener : validationListeners){
+            try {
+                listener.afterCallback(validation);
+            }catch (Exception e){
+                log.error("Error transmitting mpesa validation callback", e);
+            }
+        }
+    }
+
 
 
     @Autowired
@@ -202,6 +216,9 @@ public class MpesaTransactionValidationService
     void setMpesaCredentialService(MpesaCredentialService service) {
         this.mpesaCredentialService = service;
     }
+
+    @Autowired
+    void setValidationListeners(List<MpesaTransactionValidationListener> listeners) {this.validationListeners = listeners;}
 
 
 
