@@ -83,20 +83,16 @@ public class MpesaTransactionValidationService
             validation.setShortcode(form.getShortcode());
             validation.setTransactionId(form.getTransactionId());
             validation.setOriginatorConversationId(form.getOriginatorConversationId());
-            log.info("in conv id {}",validation.getOriginatorConversationId());
 
             validation = save(validation);
 
-            log.info( "Sending Mpesa transaction validation");
-            ResponseEntity<JSONObject> response = restTemplate.postForEntity(
+           ResponseEntity<JSONObject> response = restTemplate.postForEntity(
                     mpesaTransactionValidationUrl,
                     httpRequest,
                     JSONObject.class
             );
 
             var responseBody = response.getBody();
-            log.info("Mpesa transaction validation response received: {}", responseBody);
-
             if (responseBody != null) {
                 validation.setInitialResponseDump(responseBody.toJSONString());
                 validation.setValidationStatus(MpesaValidationStatus.INITIALIZED);
@@ -121,7 +117,7 @@ public class MpesaTransactionValidationService
 
     public void transactionStatusCallback (JSONObject callback) throws PaymentException {
         if (callback == null){
-            log.error("Mpesa transaction status callback returned empty response");
+            log.error("mpesa transaction status callback returned empty response");
             return;
         }
 

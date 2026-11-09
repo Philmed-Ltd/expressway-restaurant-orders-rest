@@ -31,17 +31,11 @@ class SalesOrderPaymentEditService
         var logForm = new CreateActivityLogForm();
         logForm.setOwningEntityId(salesOrder.getEntityId());
         logForm.setAction("SalesOrder payment");
-        String remarks = String.format(
-                "%s %s",
-                salesOrder.getEntityId(),
-                payment.getAmount()
-        );
+        String remarks = String.format("%s %s", salesOrder.getEntityId(), payment.getAmount());
         logForm.setRemarks(remarks);
         activityLogQueuingService.enqueueActivityLog(logForm);
 
     }
-
-
 
     @Autowired
     public void setSalesOrderReadService(SalesOrderReadService service) {

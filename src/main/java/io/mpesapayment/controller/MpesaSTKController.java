@@ -19,13 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class MpesaSTKController {
     private MpesaSTKPushService mpesaSTKPushService;
 
-    @PostMapping("/initiate-stk-push")
-    public ResponseEntity<Void> initiateSTKPush(@Valid @RequestBody MpesaPaymentForm form) throws PaymentException {
-        mpesaSTKPushService.stkInitialization(form);
-        return ResponseEntity.ok().build();
-    }
-
-
     @PostMapping("handle-stk-push-callback")
     public ResponseEntity<Void> handleSTKPushCallback(@RequestBody JSONObject callback) throws PaymentException {
         mpesaSTKPushService.handleSTKPushCallback(callback);
