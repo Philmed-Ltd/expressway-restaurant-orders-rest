@@ -26,6 +26,7 @@ public class SalesOrderPayment extends BaseJpaEntity {
     @Column(precision = FormatUtil.BIG_DECIMAL_PRECISION, scale = FormatUtil.BIG_DECIMAL_SCALE)
     private BigDecimal amount;
 
+    @Column(unique = true)
     private String transactionId;
 
     public void setSalesOrder(SalesOrder salesOrder) {

@@ -1,5 +1,6 @@
 package io.mpesapayment.entity;
 
+import io.salesorder.validation.UniqueTransactionId;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 @Setter
 public class Payment {
    private String accountReference;
-    private String transactionId;
-    private BigDecimal amount;
+   @UniqueTransactionId
+   private String transactionId;
+   private BigDecimal amount;
 }

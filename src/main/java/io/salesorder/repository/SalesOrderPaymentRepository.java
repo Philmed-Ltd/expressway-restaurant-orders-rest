@@ -11,5 +11,8 @@ public interface SalesOrderPaymentRepository extends BaseJpaRepository<SalesOrde
     default Specification<SalesOrderPayment> salesOrderEntityIdIs(String salesOrderId) {
         return (root, cb, cq) -> cq.equal(root.get("salesOrderEntityId"), salesOrderId);
     }
+    default Specification <SalesOrderPayment> transactionIdIs(String transactionId){
+        return (root, query, cb) -> cb.equal(root.get("transactionId") , transactionId);
+    }
 
 }
