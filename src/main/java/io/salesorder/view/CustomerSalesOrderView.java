@@ -2,6 +2,7 @@ package io.salesorder.view;
 
 import io.lib.view.BaseView;
 import io.salesorder.entity.DeliveryAddress;
+import io.salesorder.entity.OrderStatus;
 import io.salesorder.entity.SalesOrder;
 
 import java.math.BigDecimal;
@@ -24,6 +25,8 @@ public class CustomerSalesOrderView extends BaseView<SalesOrder> {
     public DeliveryAddress getAddress() { return entity.getDeliveryAddress(); }
 
     public List<SaleOrderItemView> getSaleOrderItems() { return this.saleOrderItems; }
+
+    public OrderStatus getOrderStatus(){ return entity.getOrderStatus(); }
 
     public BigDecimal getTotal() {
         return saleOrderItems.stream()

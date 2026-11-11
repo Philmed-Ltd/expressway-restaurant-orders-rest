@@ -6,15 +6,17 @@ import io.lib.view.ApiResponse;
 import io.lib.view.EntityApiResponse;
 import io.lib.view.PagedEntityApiResponse;
 import io.mpesapayment.exception.PaymentException;
+import io.salesorder.entity.OrderStatus;
 import io.salesorder.form.RegisterSalesOrderForm;
 import io.salesorder.form.SaleOrderPaymentForm;
 import io.salesorder.service.SalesOrderEditService;
 import io.salesorder.service.SalesOrderReadService;
+import io.salesorder.validation.RequiredSalesOrderStatus;
 import io.salesorder.view.CustomerSalesOrderView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
@@ -22,6 +24,7 @@ import java.util.Locale;
 import static io.lib.service.SystemConfig.CUSTOMER_USER_BASE_URL;
 
 @RestController
+@Validated
 @RequestMapping(CUSTOMER_USER_BASE_URL + "/sales-orders")
 public class ExternalSalesOrderController {
 
@@ -70,6 +73,23 @@ public class ExternalSalesOrderController {
                 .toList();
 
         return new PagedEntityApiResponse<>(page, views);
+    }
+
+    @PutMapping("cancel-order/{salesOrderId}")
+    public EntityApiResponse<CustomerSalesOrderView> cancelOrder(
+            @PathVariable
+            @RequiredSalesOrderStatus(
+                    statuses = OrderStatus.UNPAID,
+                    message = "error.sales.order.not.cancellable"
+            )
+            String salesOrderId,
+            Authentication auth,
+            Locale locale) {
+        var salesOrder = salesOrderEditService.cancelOrder(salesOrderId, auth.getName());
+        return new EntityApiResponse<>(
+                Message.get("sales.order.cancellation.success", locale),
+                new CustomerSalesOrderView(salesOrder)
+        );
     }
 
     @Autowired

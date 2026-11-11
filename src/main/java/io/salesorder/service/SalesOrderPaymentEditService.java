@@ -3,6 +3,7 @@ package io.salesorder.service;
 import io.activitylog.form.CreateActivityLogForm;
 import io.lib.service.BaseJpaRepoEditService;
 import io.mpesapayment.entity.Payment;
+import io.salesorder.entity.OrderStatus;
 import io.salesorder.entity.SalesOrderPayment;
 import io.salesorder.repository.SalesOrderPaymentRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -14,12 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 class SalesOrderPaymentEditService
         extends BaseJpaRepoEditService<SalesOrderPayment, SalesOrderPaymentRepository> {
-    private SalesOrderReadService salesOrderReadService;
+    private SalesOrderEditService salesOrderEditService;
 
     @Transactional
     void registerSalesOrderPayment(Payment payment) {
 
-        var salesOrder = salesOrderReadService.findByEntityId(payment.getAccountReference());
+        var salesOrder = salesOrderEditService.findByEntityId(payment.getAccountReference());
 
         var salesOrderPayment = new SalesOrderPayment();
         salesOrderPayment.setSalesOrder(salesOrder);
@@ -27,6 +28,8 @@ class SalesOrderPaymentEditService
         salesOrderPayment.setTransactionId(payment.getTransactionId());
 
         save(salesOrderPayment);
+        salesOrder.setOrderStatus(OrderStatus.PAID);
+        salesOrderEditService.save(salesOrder);
 
         var logForm = new CreateActivityLogForm();
         logForm.setOwningEntityId(salesOrder.getEntityId());
@@ -38,8 +41,8 @@ class SalesOrderPaymentEditService
     }
 
     @Autowired
-    public void setSalesOrderReadService(SalesOrderReadService service) {
-        this.salesOrderReadService = service;
+    public void setSalesOrderEditService(SalesOrderEditService service) {
+        this.salesOrderEditService = service;
     }
 
 }
