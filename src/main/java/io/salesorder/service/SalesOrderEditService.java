@@ -6,6 +6,7 @@ import io.lib.service.BaseJpaRepoEditService;
 import io.mpesapayment.exception.PaymentException;
 import io.mpesapayment.form.MpesaPaymentForm;
 import io.mpesapayment.service.MpesaSTKPushService;
+import io.salesorder.entity.OrderStatus;
 import io.salesorder.entity.SalesOrder;
 import io.salesorder.form.RegisterSalesOrderForm;
 import io.salesorder.form.SaleOrderPaymentForm;
@@ -13,6 +14,8 @@ import io.salesorder.repository.SalesOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class SalesOrderEditService extends BaseJpaRepoEditService<SalesOrder, SalesOrderRepository> {
@@ -40,6 +43,14 @@ public class SalesOrderEditService extends BaseJpaRepoEditService<SalesOrder, Sa
         activityLogForm.setSessionUserId(form.getSessionUserId());
         activityLogQueuingService.enqueueActivityLog(activityLogForm);
 
+        return salesOrder;
+    }
+
+    public SalesOrder cancelOrder(String salesOrderId, String updatedBy){
+        var salesOrder = findByEntityId(salesOrderId);
+        salesOrder.setOrderStatus(OrderStatus.CANCELLED);
+        salesOrder.setUpdatedAt(LocalDateTime.now());
+        salesOrder.setUpdatedByEntityId(updatedBy);
         return salesOrder;
     }
 

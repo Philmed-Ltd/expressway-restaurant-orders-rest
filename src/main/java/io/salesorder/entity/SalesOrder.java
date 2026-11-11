@@ -22,4 +22,7 @@ public class SalesOrder extends BaseJpaEntity {
 
     @OneToMany(mappedBy = "salesOrder", fetch = FetchType.LAZY)
     private List<SaleOrderItem> salesOrderItems = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus = OrderStatus.UNPAID;
 }

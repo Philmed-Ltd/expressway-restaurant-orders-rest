@@ -72,6 +72,15 @@ public class ExternalSalesOrderController {
         return new PagedEntityApiResponse<>(page, views);
     }
 
+    @PutMapping("cancel-order/{orderId}")
+    public EntityApiResponse<CustomerSalesOrderView> cancelOrder(@PathVariable String orderId, Authentication auth, Locale locale) {
+        var salesOrder = salesOrderEditService.cancelOrder(orderId, auth.getName());
+        return new EntityApiResponse<>(
+                Message.get("sales.order.cancellation.success", locale),
+                new CustomerSalesOrderView(salesOrder)
+        );
+    }
+
     @Autowired
     private void setSalesOrderEditService(SalesOrderEditService service){
         this.salesOrderEditService = service;
