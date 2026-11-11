@@ -75,17 +75,17 @@ public class ExternalSalesOrderController {
         return new PagedEntityApiResponse<>(page, views);
     }
 
-    @PutMapping("cancel-order/{orderId}")
+    @PutMapping("cancel-order/{salesOrderId}")
     public EntityApiResponse<CustomerSalesOrderView> cancelOrder(
             @PathVariable
             @RequiredSalesOrderStatus(
                     statuses = OrderStatus.UNPAID,
                     message = "error.sales.order.not.cancellable"
             )
-            String orderId,
+            String salesOrderId,
             Authentication auth,
             Locale locale) {
-        var salesOrder = salesOrderEditService.cancelOrder(orderId, auth.getName());
+        var salesOrder = salesOrderEditService.cancelOrder(salesOrderId, auth.getName());
         return new EntityApiResponse<>(
                 Message.get("sales.order.cancellation.success", locale),
                 new CustomerSalesOrderView(salesOrder)
