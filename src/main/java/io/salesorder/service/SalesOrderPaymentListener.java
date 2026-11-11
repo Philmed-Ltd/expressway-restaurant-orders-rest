@@ -15,15 +15,15 @@ public class SalesOrderPaymentListener
         extends BaseJpaRepoEditService<SalesOrder, SalesOrderRepository>
         implements PaymentListener {
 
-    private SalesOrderPaymentEditService reservationPaymentEditService;
+    private SalesOrderPaymentEditService salesOrderPaymentEditService;
 
     @Override
     public void onSuccessfulPayment(Payment payment) {
-        reservationPaymentEditService.registerSalesOrderPayment(payment);
+        salesOrderPaymentEditService.registerSalesOrderPayment(payment);
     }
 
     @Autowired
     void setSalesOrderPaymentEditService(SalesOrderPaymentEditService service) {
-        this.reservationPaymentEditService = service;
+        this.salesOrderPaymentEditService = service;
     }
 }
