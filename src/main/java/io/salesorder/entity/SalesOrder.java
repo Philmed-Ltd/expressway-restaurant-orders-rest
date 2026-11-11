@@ -6,7 +6,7 @@ import io.lib.service.FormatUtil;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,7 +27,8 @@ public class SalesOrder extends BaseJpaEntity {
     @Column(precision = FormatUtil.BIG_DECIMAL_PRECISION, scale = FormatUtil.BIG_DECIMAL_SCALE)
     private BigDecimal totalAmountToBePaid;
 
-    @OneToMany()
+    @JsonIgnore
+    @OneToMany(mappedBy = "salesOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SalesOrderPayment> payments = new HashSet<>();
 
     @OneToMany(mappedBy = "salesOrder", fetch = FetchType.LAZY)
@@ -54,7 +55,6 @@ public class SalesOrder extends BaseJpaEntity {
        if (amountPaid.compareTo(BigDecimal.ZERO) > 0) {
             return PaymentStatus.PARTIALLY_PAID;
         }
-
         return PaymentStatus.PENDING_PAYMENT;
     }
 }
