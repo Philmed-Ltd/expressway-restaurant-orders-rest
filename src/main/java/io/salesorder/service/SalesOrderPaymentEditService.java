@@ -15,20 +15,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 class SalesOrderPaymentEditService
         extends BaseJpaRepoEditService<SalesOrderPayment, SalesOrderPaymentRepository> {
-    private SalesOrderReadService salesOrderReadService;
+    private SalesOrderEditService salesOrderEditService;
 
     @Transactional
     void registerSalesOrderPayment(Payment payment) {
 
-        var salesOrder = salesOrderReadService.findByEntityId(payment.getAccountReference());
+        var salesOrder = salesOrderEditService.findByEntityId(payment.getAccountReference());
 
         var salesOrderPayment = new SalesOrderPayment();
-        salesOrder.setOrderStatus(OrderStatus.PAID);
         salesOrderPayment.setSalesOrder(salesOrder);
         salesOrderPayment.setAmount(payment.getAmount());
         salesOrderPayment.setTransactionId(payment.getTransactionId());
 
         save(salesOrderPayment);
+        salesOrder.setOrderStatus(OrderStatus.PAID);
+        salesOrderEditService.save(salesOrder);
 
         var logForm = new CreateActivityLogForm();
         logForm.setOwningEntityId(salesOrder.getEntityId());
@@ -40,8 +41,8 @@ class SalesOrderPaymentEditService
     }
 
     @Autowired
-    public void setSalesOrderReadService(SalesOrderReadService service) {
-        this.salesOrderReadService = service;
+    public void setSalesOrderEditService(SalesOrderEditService service) {
+        this.salesOrderEditService = service;
     }
 
 }
