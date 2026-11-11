@@ -37,5 +37,4 @@ public class SaleOrderItemEditService  extends BaseJpaRepoEditService<SaleOrderI
     public void setProductItemReadService(ProductItemReadService service){
         this.productItemReadService = service;
     }
-
 }

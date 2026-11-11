@@ -2,14 +2,18 @@ package io.salesorder.controller.external;
 
 import io.lib.form.BaseFetchForm;
 import io.lib.service.Message;
+import io.lib.view.ApiResponse;
 import io.lib.view.EntityApiResponse;
 import io.lib.view.PagedEntityApiResponse;
+import io.mpesapayment.exception.PaymentException;
 import io.salesorder.form.RegisterSalesOrderForm;
+import io.salesorder.form.SaleOrderPaymentForm;
 import io.salesorder.service.SalesOrderEditService;
 import io.salesorder.service.SalesOrderReadService;
 import io.salesorder.view.CustomerSalesOrderView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +39,19 @@ public class ExternalSalesOrderController {
                 Message.get("sales.order.registration.success", locale),
                 new CustomerSalesOrderView(salesOrder)
         );
+    }
+
+   @PostMapping("pay/{salesOrderId}")
+    public ApiResponse initializePayment(
+           @PathVariable String salesOrderId,
+           @RequestBody
+           @Valid
+           SaleOrderPaymentForm form,
+           Authentication auth,
+           Locale locale) throws PaymentException {
+        form.setSessionUserId(auth.getName());
+        salesOrderEditService.initializePayment(salesOrderId, form);
+        return new ApiResponse(Message.get("payment.initialization.success", locale));
     }
 
     @GetMapping("list")

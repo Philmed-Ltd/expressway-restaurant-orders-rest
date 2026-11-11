@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -41,6 +42,8 @@ public class MpesaTransactionValidationService
     private String mpesaTransactionValidationCallbackUrl;
 
     private String mpesaTransactionValidationTimeoutUrl;
+    private List<MpesaTransactionValidationListener> validationListeners;
+
 
     public void queryTransactionStatus(String transactionId) throws PaymentException {
         if (transactionId == null || transactionId.isBlank()) {
@@ -80,20 +83,16 @@ public class MpesaTransactionValidationService
             validation.setShortcode(form.getShortcode());
             validation.setTransactionId(form.getTransactionId());
             validation.setOriginatorConversationId(form.getOriginatorConversationId());
-            log.info("in conv id {}",validation.getOriginatorConversationId());
 
             validation = save(validation);
 
-            log.info( "Sending Mpesa transaction validation");
-            ResponseEntity<JSONObject> response = restTemplate.postForEntity(
+           ResponseEntity<JSONObject> response = restTemplate.postForEntity(
                     mpesaTransactionValidationUrl,
                     httpRequest,
                     JSONObject.class
             );
 
             var responseBody = response.getBody();
-            log.info("Mpesa transaction validation response received: {}", responseBody);
-
             if (responseBody != null) {
                 validation.setInitialResponseDump(responseBody.toJSONString());
                 validation.setValidationStatus(MpesaValidationStatus.INITIALIZED);
@@ -118,7 +117,7 @@ public class MpesaTransactionValidationService
 
     public void transactionStatusCallback (JSONObject callback) throws PaymentException {
         if (callback == null){
-            log.error("Mpesa transaction status callback returned empty response");
+            log.error("mpesa transaction status callback returned empty response");
             return;
         }
 
@@ -160,7 +159,8 @@ public class MpesaTransactionValidationService
             validation.setValidationStatus(MpesaValidationStatus.FAILED);
         }
 
-        save(validation);
+        validation = save(validation);
+        notifyOnProcessingValidationCallback(validation);
     }
 
     public void transactionStatusTimeout (JSONObject callback) throws PaymentException {
@@ -191,6 +191,16 @@ public class MpesaTransactionValidationService
         );
     }
 
+    private void notifyOnProcessingValidationCallback(MpesaTransactionValidation validation){
+        for(MpesaTransactionValidationListener listener : validationListeners){
+            try {
+                listener.afterCallback(validation);
+            }catch (Exception e){
+                log.error("Error transmitting mpesa validation callback", e);
+            }
+        }
+    }
+
 
 
     @Autowired
@@ -202,6 +212,9 @@ public class MpesaTransactionValidationService
     void setMpesaCredentialService(MpesaCredentialService service) {
         this.mpesaCredentialService = service;
     }
+
+    @Autowired
+    void setValidationListeners(List<MpesaTransactionValidationListener> listeners) {this.validationListeners = listeners;}
 
 
 
