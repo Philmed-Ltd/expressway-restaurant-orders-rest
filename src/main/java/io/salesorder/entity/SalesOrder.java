@@ -25,12 +25,10 @@ public class SalesOrder extends BaseJpaEntity {
     private DeliveryAddress deliveryAddress;
 
     @Column(precision = FormatUtil.BIG_DECIMAL_PRECISION, scale = FormatUtil.BIG_DECIMAL_SCALE)
-    private BigDecimal amountDue;
+    private BigDecimal totalAmountToBePaid;
 
     @OneToMany()
     private Set<SalesOrderPayment> payments = new HashSet<>();
-
-
 
     @OneToMany(mappedBy = "salesOrder", fetch = FetchType.LAZY)
     private List<SaleOrderItem> salesOrderItems = new ArrayList<>();
@@ -44,5 +42,19 @@ public class SalesOrder extends BaseJpaEntity {
                 .map(SalesOrderPayment::getAmount)
                 .filter(java.util.Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public PaymentStatus getOrderPaymentStatus() {
+        BigDecimal amountPaid = getAmountPaid();
+
+       if (amountPaid.compareTo(totalAmountToBePaid) >= 0) {
+            return PaymentStatus.FULLY_PAID;
+        }
+
+       if (amountPaid.compareTo(BigDecimal.ZERO) > 0) {
+            return PaymentStatus.PARTIALLY_PAID;
+        }
+
+        return PaymentStatus.PENDING_PAYMENT;
     }
 }

@@ -30,6 +30,7 @@ public class SalesOrderEditService extends BaseJpaRepoEditService<SalesOrder, Sa
         var salesOrder = new SalesOrder();
         salesOrder.setCustomer(customer);
         salesOrder.setDeliveryAddress(form.getDeliveryAddress());
+        salesOrder.setTotalAmountToBePaid(form.getTotalAmountToBePaid());
         salesOrder = save(salesOrder);
 
         saleOrderItemEditService.registerSaleOrderItems(salesOrder, form.getItems());

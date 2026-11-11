@@ -19,7 +19,7 @@ class FullyPaidSalesOrderValidator
     public boolean isValid(String salesOrderId, ConstraintValidatorContext context) {
 
         SalesOrder salesOrder = salesOrderReadService.findByEntityId(salesOrderId);
-        BigDecimal totalCharge = salesOrder.getAmountDue();
+        BigDecimal totalCharge = salesOrder.getTotalAmountToBePaid();
         BigDecimal amountPaid = salesOrder.getAmountPaid();
         if (totalCharge == null) { return false; }
         if (amountPaid == null) { return false; }

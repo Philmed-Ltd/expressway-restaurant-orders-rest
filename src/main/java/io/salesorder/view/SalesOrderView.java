@@ -1,6 +1,9 @@
 package io.salesorder.view;
 
+import io.salesorder.entity.PaymentStatus;
 import io.salesorder.entity.SalesOrder;
+
+import java.math.BigDecimal;
 
 public class SalesOrderView extends CustomerSalesOrderView {
 
@@ -13,4 +16,9 @@ public class SalesOrderView extends CustomerSalesOrderView {
     public String getCustomerEmail() { return entity.getCustomer().getEmail(); }
 
     public String getCustomerPhoneNumber() { return entity.getCustomer().getPhoneNumber(); }
+
+    public BigDecimal getAmountPaid(){return entity.getAmountPaid();}
+
+    public PaymentStatus getPaymentStatus(){return entity.getOrderPaymentStatus();}
+
 }
