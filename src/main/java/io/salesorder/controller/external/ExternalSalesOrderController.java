@@ -16,6 +16,7 @@ import io.salesorder.view.CustomerSalesOrderView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
@@ -23,6 +24,7 @@ import java.util.Locale;
 import static io.lib.service.SystemConfig.CUSTOMER_USER_BASE_URL;
 
 @RestController
+@Validated
 @RequestMapping(CUSTOMER_USER_BASE_URL + "/sales-orders")
 public class ExternalSalesOrderController {
 
